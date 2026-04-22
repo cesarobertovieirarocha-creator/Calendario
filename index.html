@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendário Corporativo - Rosa Premium</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📅 Calendário Corporativo</h1>
+            <p>Indústrias: Nivea • Cargill • Reckitt</p>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-prev" onclick="previousMonth()">◀ Anterior</button>
+            <input type="month" id="monthFilter" class="date-filter" onchange="filterByMonth(this.value)">
+            <button class="btn btn-today" onclick="goToToday()">Hoje</button>
+            <button class="btn btn-next" onclick="nextMonth()">Próximo ▶</button>
+        </div>
+
+        <div class="calendar" id="calendar">
+            <!-- Dias da semana serão gerados pelo JS -->
+        </div>
+
+        <div style="padding: 20px; text-align: center; background: rgba(255, 255, 255, 0.8);">
+            <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-top: 10px;">
+                <div><span class="event nivea" style="margin-right: 8px;"></span> Nivea (Azul)</div>
+                <div><span class="event cargill" style="margin-right: 8px;"></span> Cargill (Vermelho)</div>
+                <div><span class="event reckitt" style="margin-right: 8px;"></span> Reckitt (Verde)</div>
+            </div>
+            <div
+                style="margin-top: 10px; font-size: 12px; color: #666; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                <span>🔴 Faça (Urgente/Importante)</span>
+                <span>🔵 Agende (Não Urgente/Importante)</span>
+                <span>🟡 Delegue (Urgente/Não Importante)</span>
+                <span>⚪ Elimine (Não Urgente/Não Importante)</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
