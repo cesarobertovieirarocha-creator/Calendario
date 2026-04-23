@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eisenhower Matrix - Premium Productivity</title>
+    <link rel="stylesheet" href="script.css">
+</head>
+
+<body>
+    <div id="login-screen" class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <img src="https://cdn-icons-png.flaticon.com/512/236/236832.png" alt="Login" width="60">
+                <h2>Acesso Restrito</h2>
+                <p>Equipe Sigma & Mondelez</p>
+            </div>
+            <form id="loginForm">
+                <div class="input-group">
+                    <label>Divisão</label>
+                    <select id="loginDivision" required>
+                        <option value="" disabled selected>Selecione a Divisão</option>
+                        <option value="sigma">Sigma</option>
+                        <option value="mondelez">Mondelez</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Usuário</label>
+                    <input type="text" id="username" placeholder="seu.nome" required>
+                </div>
+                <div class="input-group">
+                    <label>Senha</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-login">Entrar</button>
+                <p id="loginError" class="error-msg"></p>
+            </form>
+        </div>
+    </div>
+
+    <div class="container" id="main-container" style="display: none;">
+        <div class="header">
+            <div class="user-profile">
+                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Avatar" class="user-avatar"
+                    id="userAvatar">
+                <div class="user-details">
+                    <span class="user-name" id="loggedUser">Usuário</span>
+                </div>
+                <button class="btn-logout" onclick="logout()">Sair</button>
+            </div>
+            <h1 id="mainTitle">EQUIPE SIGMA</h1>
+            <p>ORGANIZADOR DE TAREFAS</p>
+        </div>
+
+        <div class="controls">
+            <button class="btn" onclick="previousMonth()">◀</button>
+            <input type="month" id="monthFilter" class="date-filter" onchange="filterByMonth(this.value)">
+
+            <div class="filters-group">
+                <select id="filterIndustry" class="date-filter" onchange="applyFilters()">
+                    <option value="all">Todos Fornecedores</option>
+                    <option value="brand-nivea">Nivea</option>
+                    <option value="brand-rayovac">Rayovac</option>
+                    <option value="brand-reckitt">Reckitt</option>
+                    <option value="brand-vestacy">Vestacy</option>
+                    <option value="brand-kimberly">Kimberly-Clark</option>
+                    <option value="brand-diageo">Diageo</option>
+                    <option value="brand-vct">VCT</option>
+                    <option value="brand-bic">BIC</option>
+                    <option value="brand-cargill">Cargill</option>
+                    <option value="brand-haleon">Haleon</option>
+                    <option value="brand-Operacional">Operacional</option>
+                </select>
+
+                <select id="filterMatrix" class="date-filter" onchange="applyFilters()">
+                    <option value="all">Todas Prioridades</option>
+                    <option value="do">Fazer Agora</option>
+                    <option value="schedule">Agendar</option>
+                    <option value="delegate">Delegar</option>
+                    <option value="eliminate">Eliminar</option>
+                </select>
+            </div>
+
+            <button class="btn btn-today" onclick="goToToday()">Hoje</button>
+            <button class="btn btn-summary" onclick="openSummary()">Ver Resumo</button>
+            <button class="btn" onclick="nextMonth()">▶</button>
+        </div>
+
+        <div class="calendar" id="calendar">
+            <!-- Gerado via JS -->
+        </div>
+
+        <!-- Modal para Adicionar Evento -->
+        <div id="eventModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h2>Novo Evento</h2>
+                <form id="eventForm">
+                    <input type="hidden" id="eventDate">
+                    <label>Título:</label>
+                    <input type="text" id="eventTitle" placeholder="Ex: Reunião de Planejamento" required>
+
+                    <label>Indústria / Marca:</label>
+                    <select id="eventIndustry">
+                        <option value="brand-nivea">Nivea</option>
+                        <option value="brand-rayovac">Rayovac</option>
+                        <option value="brand-reckitt">Reckitt</option>
+                        <option value="brand-vestacy">Vestacy</option>
+                        <option value="brand-kimberly">Kimberly-Clark</option>
+                        <option value="brand-diageo">Diageo</option>
+                        <option value="brand-vct">VCT</option>
+                        <option value="brand-bic">BIC</option>
+                        <option value="brand-cargill">Cargill</option>
+                        <option value="brand-haleon">Haleon</option>
+                        <option value="brand-Operacional">Operacional</option>
+                    </select>
+
+                    <label>Prioridade (Eisenhower):</label>
+                    <select id="eventMatrix">
+                        <option value="do">Fazer Agora (Urgente/Importante)</option>
+                        <option value="schedule">Agendar (Não Urgente/Importante)</option>
+                        <option value="delegate">Delegar (Urgente/Não Importante)</option>
+                        <option value="eliminate">Eliminar (Não Urgente/Não Importante)</option>
+                    </select>
+
+                    <button type="submit" class="btn btn-today" style="width: 100%; margin-top: 20px;">Salvar
+                        Evento</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="legend-container">
+            <div class="legend-grid">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #d32f2f;"></div>
+                    <div><strong>Fazer Agora:</strong> Urgente e Importante. Atenção imediata necessária.</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #1976d2;"></div>
+                    <div><strong>Agendar:</strong> Importante, Não Urgente. Planejamento e foco.</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #fbc02d;"></div>
+                    <div><strong>Delegar:</strong> Urgente, Não Importante. Tarefas para terceiros.</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #9e9e9e;"></div>
+                    <div><strong>Eliminar:</strong> Não Urgente, Não Importante. Perda de tempo.</div>
+                </div>
+
+                <!-- Modal para Resumo de Atividades -->
+                <div id="summaryModal" class="modal">
+                    <div class="modal-content summary-modal">
+                        <span class="close" onclick="closeSummary()">&times;</span>
+                        <h2>📋 Resumo Geral de Atividades</h2>
+
+                        <div class="modal-filters">
+                            <select id="summaryFilterIndustry" class="date-filter" onchange="openSummary()">
+                                <option value="all">Todos Fornecedores</option>
+                                <option value="brand-nivea">Nivea</option>
+                                <option value="brand-rayovac">Rayovac</option>
+                                <option value="brand-reckitt">Reckitt</option>
+                                <option value="brand-vestacy">Vestacy</option>
+                                <option value="brand-kimberly">Kimberly-Clark</option>
+                                <option value="brand-diageo">Diageo</option>
+                                <option value="brand-vct">VCT</option>
+                                <option value="brand-bic">BIC</option>
+                                <option value="brand-cargill">Cargill</option>
+                                <option value="brand-haleon">Haleon</option>
+                                <option value="brand-Operacional">Operacional</option>
+                            </select>
+
+                            <select id="summaryFilterMatrix" class="date-filter" onchange="openSummary()">
+                                <option value="all">Todas Prioridades</option>
+                                <option value="do">Fazer Agora</option>
+                                <option value="schedule">Agendar</option>
+                                <option value="delegate">Delegar</option>
+                                <option value="eliminate">Eliminar</option>
+                            </select>
+                        </div>
+
+                        <div id="summaryList" class="summary-list">
+                            <!-- Gerado via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script src="script.js"></script>
+</body>
+
+</html>
